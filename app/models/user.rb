@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_many :swims
+  has_many :swims, dependent: :destroy
   has_many :challenges, through: :swims
 
   # Include default devise modules. Others available are:
