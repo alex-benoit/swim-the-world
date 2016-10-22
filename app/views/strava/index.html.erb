@@ -5,5 +5,5 @@
 <%  @client = Strava::Api::V3::Client.new(:access_token => "226004c3eb4b1a1fd6465c1952d510cbd0d7007c") %>
 
 
-<%= @client.retrieve_current_athlete %>
+<%= @client.list_athlete_activities %>
 
