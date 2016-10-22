@@ -7,7 +7,9 @@
   <div class="row">
     <% @challenges.each do |challenge| %>
     <div class="col-xs-6 col-md-4">
-      <p><%= challenge.name %></p>
+      <p><%= link_to challenge.name, challenge_path(id: challenge.id) %></p>
+      <p><%= link_to challenge.name, challenge_path(id: challenge.id) %></p>
+
     </div>
     <% end %>
   </div>
