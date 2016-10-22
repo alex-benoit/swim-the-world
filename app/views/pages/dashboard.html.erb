@@ -1,13 +1,13 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
-      <h1>Challenges</h1>
+      <h1>My Challenges</h1>
     </div>
+  </div>
+  <div class="row">
     <% @challenges.each do |challenge| %>
     <div class="col-xs-6 col-md-4">
-      <div class="card">
-        <p><%= link_to challenge.name, challenge_path(id: challenge.id) %></p>
-      </div>
+      <p><%= challenge.name %></p>
     </div>
     <% end %>
   </div>
