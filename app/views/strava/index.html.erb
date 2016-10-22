@@ -2,10 +2,8 @@
 <p>Find me in app/views/strava/index.html.erb</p>
 
 
-<%  
+<%  @client = Strava::Api::V3::Client.new(:access_token => "226004c3eb4b1a1fd6465c1952d510cbd0d7007c") %>
 
-@client = Strava::Api::V3::Client.new(:access_token => "226004c3eb4b1a1fd6465c1952d510cbd0d7007c")
 
-@client.retrieve_current_athlete
+<%= @client.retrieve_an_activity(752681787) %>
 
-%>
