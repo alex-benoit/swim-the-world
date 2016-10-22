@@ -1,12 +1,10 @@
 <div class="container">
   <h1><%= @challenge.name %></h1>
     <div id="map" style='height: 400px;'></div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2YZMcLQfI31Pg3iNzrBCtR7mpg03VwLI&callback=initMap"
-    async defer></script>
-    <%= content_for(:after_js) do %>
     <script>
         var swimRouteCoordinates = <%= @challenge.position_points %>
         initMap(swimRouteCoordinates, 0);
     </script>
+    <%= content_for(:after_js) do %>
     <% end %>
 </div>
