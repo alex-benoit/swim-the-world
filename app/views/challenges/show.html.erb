@@ -1,9 +1,9 @@
 <div class="container">
   <h1><%= @challenge.name %></h1>
-    <div id="map"></div>
+    <div id="map" style='height: 400px;'></div>
     <script>
       function initMap() {
-        var swimRouteCoordinates = [<%= @challenge.position_points %>];
+        var swimRouteCoordinates = <%= @challenge.position_points %>
 
         var map = new google.maps.Map(document.getElementById('map'), {
           //zoom: 10,
@@ -12,9 +12,9 @@
         });
 
         var bounds = new google.maps.LatLngBounds();
-        for (var i = 0; i < coords.length - 1; i++)
+        for (var i = 0; i < swimRouteCoordinates.length; i++)
         {
-            var pt = new google.maps.LatLng(lat, lng);
+            var pt = new google.maps.LatLng(swimRouteCoordinates[i].lat, swimRouteCoordinates[i].lng);
             bounds.extend(pt);
         }
         map.fitBounds(bounds);
