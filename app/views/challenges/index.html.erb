@@ -8,7 +8,9 @@
       <div class="card">
         <p><%= link_to challenge.name, challenge_path(id: challenge.id) %></p>
         <% if challenge.users.find_by_id(current_user.id).nil?%>
-          <p><%= link_to 'Participate', challenge_swims_path(challenge_id: challenge.id), method: :post %></p>
+          <%= link_to 'Participate', challenge_swims_path(challenge_id: challenge.id), method: :post %>
+        <% else %>
+          <%= link_to 'Give up', '#' %>
         <% end %>
       </div>
     </div>
