@@ -1,0 +1,23 @@
+.card {
+  height: 400px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  background-size: cover !important;
+  color: $brand-color;
+  position: relative;
+}
+.card-main-image{
+  position: absolute;
+  right: 30px;
+  top: 30px;
+}
+.card-user {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+.card h2 {
+  font-size: 24px;
+}
+.card p {
+  font-size: 13px;
+}
