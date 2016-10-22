@@ -8,6 +8,12 @@
     <% @challenges.each do |challenge| %>
     <div class="col-xs-6 col-md-4">
       <p><%= link_to challenge.name, challenge_path(id: challenge.id) %></p>
+      <% if challenge.users.find_by_id(current_user.id).nil? %>
+        <p><%= link_to 'Participate', challenge_swims_path(challenge_id: challenge.id), method: :post %></p>
+      <% else %>
+        <p><%= link_to 'Give up', '#' %></p>
+      <% end %>
+
 
     </div>
     <% end %>
