@@ -17,7 +17,7 @@
           <% if challenge.users.find_by_id(current_user.id).nil? %>
             <%= link_to 'Participate', challenge_swims_path(challenge_id: challenge.id), method: :post, class: 'btn btn-warning button-links' %>
           <% else %>
-            <%= link_to 'Give up', '#', class: 'btn btn-primary button-links' %>
+            <%= link_to 'Pause', '#', class: 'btn btn-primary button-links' %>
           <% end %>
         <% end %>
       </div>
