@@ -9,7 +9,3 @@ Challenge.create(name: 'Tropical Islands', position_points: '[{lat: 51.074336, l
 
 Swim.create!(user: alex, challenge: channel)
 Swim.create!(user: alex, challenge: thames)
-
-
-
-

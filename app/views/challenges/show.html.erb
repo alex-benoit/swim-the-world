@@ -1,152 +1,171 @@
-<div class="container">
-  <h1><%= @challenge.name %></h1>
-    <div id="map" style='height: 400px;'></div>
-    <script>
-      function initMap() {
-        var swimRouteCoordinates = <%= @challenge.position_points %>
+<div class="container-fluid">
+  <%= image_tag "chal1.png", style: "height: 130px; z-index:2; position: absolute; top:105px; right: 130px" %>
+  <div style="width:100%;background-color:#7379AF">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <div style="height: 60px">
+            <h1 style="color: #FFFFFF; font-size:30px; margin-top:30px"><%= @challenge.name %></h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        var map = new google.maps.Map(document.getElementById('map'), {
-          //zoom: 10,
-          //center: swimRouteCoordinates[0],
-          //mapTypeId: 'terrain'
-        });
+  <div id="map" style='height: 500px; width: 100%'></div>
+  <%= link_to "Pause", '#' , class:"btn btn-warning", style:"position:absolute; top:590px; left:130px"%>
+  <script>
+    function initMap() {
+      var swimRouteCoordinates = <%= @challenge.position_points %>
 
-        var routeTotal = calcDistance(swimRouteCoordinates);
-        var perc = 0;
-        var userCurDist = 0;
-        <% if !@challenge.users.find_by_id(current_user.id).nil? && !@challenge.swims.where("user_id = ?", current_user.id).nil? %>
-          userCurDist = <%= @challenge.swims.where("user_id = ?", current_user.id).pluck(:distance_done) %>; 
-        <% end %>
-        if (userCurDist > 0)
-        {
-          perc = userCurDist / routeTotal;
-        }
+      var map = new google.maps.Map(document.getElementById('map'), {
+        //zoom: 10,
+        //center: swimRouteCoordinates[0],
+        //mapTypeId: 'terrain'
+      });
 
-        var bounds = new google.maps.LatLngBounds();
-        for (var i = 0; i < swimRouteCoordinates.length; i++)
-        {
-            var pt = new google.maps.LatLng(swimRouteCoordinates[i].lat, swimRouteCoordinates[i].lng);
-            bounds.extend(pt);
-        }
-        map.fitBounds(bounds);
+      var routeTotal = calcDistance(swimRouteCoordinates);
+      var perc = 0;
+      var userCurDist = 0;
+      <% if !@challenge.users.find_by_id(current_user.id).nil? && !@challenge.swims.where("user_id = ?", current_user.id).nil? %>
+        userCurDist = <%= @challenge.swims.where("user_id = ?", current_user.id).pluck(:distance_done) %>;
+      <% end %>
+      if (userCurDist > 0)
+      {
+        perc = userCurDist / routeTotal;
+      }
 
-        var swimRoute = new google.maps.Polyline({
-          path: swimRouteCoordinates,
-          geodesic: true, 
-          strokeColor: '#0901AF',
-          strokeOpacity: 0.7,
+      var bounds = new google.maps.LatLngBounds();
+      for (var i = 0; i < swimRouteCoordinates.length; i++)
+      {
+          var pt = new google.maps.LatLng(swimRouteCoordinates[i].lat, swimRouteCoordinates[i].lng);
+          bounds.extend(pt);
+      }
+      map.fitBounds(bounds);
+
+      var swimRoute = new google.maps.Polyline({
+        path: swimRouteCoordinates,
+        geodesic: true,
+        strokeColor: '#0901AF',
+        strokeOpacity: 0.7,
+        strokeWeight: 4,
+        zIndex: 1
+      });
+
+      swimRoute.setMap(map);
+
+      if (perc > 0)
+      {
+        var swimCompleteCoordinates = createCompleteCoordinates(swimRouteCoordinates, perc);
+
+        var swimComplete = new google.maps.Polyline({
+          path: swimCompleteCoordinates,
+          geodesic: true,
+          strokeColor: '#CC010F',
+          strokeOpacity: 1.0,
           strokeWeight: 4,
-          zIndex: 1
+          zIndex: 2
         });
 
-        swimRoute.setMap(map);
-
-        if (perc > 0)
-        {
-          var swimCompleteCoordinates = createCompleteCoordinates(swimRouteCoordinates, perc);
-
-          var swimComplete = new google.maps.Polyline({
-            path: swimCompleteCoordinates,
-            geodesic: true,
-            strokeColor: '#CC010F',
-            strokeOpacity: 1.0,
-            strokeWeight: 4,
-            zIndex: 2
-          });
-
-          swimComplete.setMap(map);
-        }
+        swimComplete.setMap(map);
       }
+    }
 
-      function createCompleteCoordinates(route, perc)
+    function createCompleteCoordinates(route, perc)
+    {
+      var completedCoords = [];
+      completedCoords.push(route[0]);
+      var lastAddedCompletedDist = 0;
+
+      var totalDist = calc2dDistance(route);
+      var completedDist = totalDist * perc;
+
+      var curCoordIndex = 1;
+      do
       {
-        var completedCoords = [];
-        completedCoords.push(route[0]);
-        var lastAddedCompletedDist = 0;
+        var nextCoord = route[curCoordIndex];
+        var testCoords = completedCoords.slice();
+        testCoords.push(nextCoord);
 
-        var totalDist = calc2dDistance(route);
-        var completedDist = totalDist * perc;
-
-        var curCoordIndex = 1;
-        do
+        var testDistance = calc2dDistance(testCoords);
+        if (testDistance > completedDist)
         {
-          var nextCoord = route[curCoordIndex];
-          var testCoords = completedCoords.slice();
-          testCoords.push(nextCoord);
-          
-          var testDistance = calc2dDistance(testCoords);
-          if (testDistance > completedDist)
-          {
-            var curAddedSegmentDist = get2dDistance(route[curCoordIndex - 1], route[curCoordIndex]);
-            var outstandingDistPerc = (completedDist - lastAddedCompletedDist) / curAddedSegmentDist;
-            completedCoords.push(calcNext2dCoord(route[curCoordIndex - 1], route[curCoordIndex], outstandingDistPerc));
-            break;
-          }
-          else if (testDistance == completedDist)
-          {
-            break;
-          }
-          else
-          {
-            completedCoords.push(route[curCoordIndex]);
-            lastAddedCompletedDist = calc2dDistance(completedCoords);
-          }
-          curCoordIndex++;
+          var curAddedSegmentDist = get2dDistance(route[curCoordIndex - 1], route[curCoordIndex]);
+          var outstandingDistPerc = (completedDist - lastAddedCompletedDist) / curAddedSegmentDist;
+          completedCoords.push(calcNext2dCoord(route[curCoordIndex - 1], route[curCoordIndex], outstandingDistPerc));
+          break;
         }
-        while (true)
-
-        return completedCoords;
+        else if (testDistance == completedDist)
+        {
+          break;
+        }
+        else
+        {
+          completedCoords.push(route[curCoordIndex]);
+          lastAddedCompletedDist = calc2dDistance(completedCoords);
+        }
+        curCoordIndex++;
       }
+      while (true)
 
-      function calcNext2dCoord(startCoord, futureCoord, perc)
+      return completedCoords;
+    }
+
+    function calcNext2dCoord(startCoord, futureCoord, perc)
+    {
+      var nextLatDiff = (futureCoord.lat - startCoord.lat) * perc;
+      var nextLngDiff = (futureCoord.lng - startCoord.lng) * perc;
+
+      return {lat: startCoord.lat + nextLatDiff, lng: startCoord.lng + nextLngDiff};
+    }
+
+    function calcDistance(coords) {
+      var total = 0;
+      for (var i = 0; i < coords.length - 1; i++)
       {
-        var nextLatDiff = (futureCoord.lat - startCoord.lat) * perc;
-        var nextLngDiff = (futureCoord.lng - startCoord.lng) * perc;
-
-        return {lat: startCoord.lat + nextLatDiff, lng: startCoord.lng + nextLngDiff};
+        total += getDistance(coords[i], coords[i+1]);
       }
+      return total;
+    }
 
-      function calcDistance(coords) {
-        var total = 0;
-        for (var i = 0; i < coords.length - 1; i++)
-        {
-          total += getDistance(coords[i], coords[i+1]);
-        }
-        return total;
+    function calc2dDistance(coords) {
+      var total = 0;
+      for (var i = 0; i < coords.length - 1; i++)
+      {
+        total += get2dDistance(coords[i], coords[i+1]);
       }
+      return total;
+    }
 
-      function calc2dDistance(coords) {
-        var total = 0;
-        for (var i = 0; i < coords.length - 1; i++)
-        {
-          total += get2dDistance(coords[i], coords[i+1]);
-        }
-        return total;
-      }
+    function rad(x) {
+      return x * Math.PI / 180;
+    };
 
-      function rad(x) {
-        return x * Math.PI / 180;
-      };
+    function get2dDistance(p1, p2) {
+      var d = Math.sqrt( (p1.lat-p2.lat)*(p1.lat-p2.lat) + (p1.lng-p2.lng)*(p1.lng-p2.lng) );
 
-      function get2dDistance(p1, p2) {
-        var d = Math.sqrt( (p1.lat-p2.lat)*(p1.lat-p2.lat) + (p1.lng-p2.lng)*(p1.lng-p2.lng) );
+      return d;
+    }
 
-        return d;
-      }
+    function getDistance(p1, p2) {
+      var R = 6378137; // Earth?s mean radius in meter
+      var dLat = rad(p2.lat - p1.lat);
+      var dLong = rad(p2.lng - p1.lng);
+      var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(rad(p1.lat)) * Math.cos(rad(p2.lat)) *
+        Math.sin(dLong / 2) * Math.sin(dLong / 2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      var d = R * c;
+      return d; // returns the distance in meter
+    };
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2YZMcLQfI31Pg3iNzrBCtR7mpg03VwLI&callback=initMap"></script>
 
-      function getDistance(p1, p2) {
-        var R = 6378137; // Earth?s mean radius in meter
-        var dLat = rad(p2.lat - p1.lat);
-        var dLong = rad(p2.lng - p1.lng);
-        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-          Math.cos(rad(p1.lat)) * Math.cos(rad(p2.lat)) *
-          Math.sin(dLong / 2) * Math.sin(dLong / 2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        var d = R * c;
-        return d; // returns the distance in meter
-      };
-    </script>
-    <%= content_for(:after_js) do %>
-    <% end %>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2YZMcLQfI31Pg3iNzrBCtR7mpg03VwLI&callback=initMap"></script>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h1><%= @challenge.name %></h1>
+      </div>
+    </div>
+  </div>
 </div>
