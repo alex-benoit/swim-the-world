@@ -7,16 +7,18 @@
     <% colors = ["#F2C94C", "#868EDA", "#34AFB7", "#EB5757", "#51A882", "#EB9557", "#56CCF2", "#9F5AD2"] %>
     <% @challenges.each do |challenge| %>
     <div class="col-xs-6 col-md-3">
+      <%= link_to challenge_path(id: challenge.id) do %>
       <div class="card" style="background-color:<%= colors.shift %>">
         <%= image_tag "chal#{a.shift || 1}.png", class: "card-main-image" %>
-        <h2><%= link_to challenge.name, challenge_path(id: challenge.id) %></h2>
+        <h2><%= challenge.name %></h2>
         <% if challenge.users.find_by_id(current_user.id).nil? %>
           <%= link_to 'Participate', challenge_swims_path(challenge_id: challenge.id), method: :post, class: 'btn btn-warning button-links' %>
         <% else %>
           <%= link_to 'Give up', '#', class: 'btn btn-primary button-links' %>
         <% end %>
       </div>
-    </div>
+      <% end %>
+      </div>
     <% end %>
   </div>
 </div>
