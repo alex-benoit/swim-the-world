@@ -14,6 +14,19 @@
 
   <div id="map" style='height: 500px; width: 100%'></div>
   <%= link_to "Pause", '#' , class:"btn btn-warning", style:"position:absolute; top:590px; left:130px"%>
+
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="position:absolute; top:590px; right:130px">Full Stats</button>
+
+  <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content" style="border-radius: 10px">
+          <div class="modal-body">
+              <%= image_tag "fulldetails.png", style: "width: 100%; height: 100%;" %>
+          </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     function initMap() {
       var swimRouteCoordinates = <%= @challenge.position_points %>
