@@ -14,7 +14,7 @@
         var routeTotal = calcDistance(swimRouteCoordinates);
         var perc = 0;
         <% if !@challenge.users.find_by_id(current_user.id).nil? %>
-          var userCurDist = <% @current_user.swims.sum(:distance_done) %>; 
+          var userCurDist = <% @challenge.users.find_by_id(current_user.id).swims.sum(:distance_done) %>; 
         <% end %>
         var bounds = new google.maps.LatLngBounds();
         for (var i = 0; i < swimRouteCoordinates.length; i++)
