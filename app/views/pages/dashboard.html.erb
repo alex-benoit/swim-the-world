@@ -6,16 +6,23 @@
   </div>
   <div class="row">
     <% @challenges.each do |challenge| %>
-    <div class="col-xs-6 col-md-4">
-      <p><%= link_to challenge.name, challenge_path(id: challenge.id) %></p>
-      <% if challenge.users.find_by_id(current_user.id).nil? %>
-        <p><%= link_to 'Participate', challenge_swims_path(challenge_id: challenge.id), method: :post %></p>
-      <% else %>
-        <p><%= link_to 'Give up', '#' %></p>
+    <div class="col-xs-6 col-md-3">
+      <%= link_to challenge_path(id: challenge.id) do %>
+      <div class="card" style="background-color:#EB9557">
+        <%= image_tag "chal6.png", class: "card-main-image" %>
+        <h2><%= challenge.name %></h2>
+        <% if current_user.nil? %>
+          <%= link_to 'Participate', challenge_swims_path(challenge_id: challenge.id), method: :post, class: 'btn btn-warning button-links' %>
+        <% else %>
+          <% if challenge.users.find_by_id(current_user.id).nil? %>
+            <%= link_to 'Participate', challenge_swims_path(challenge_id: challenge.id), method: :post, class: 'btn btn-warning button-links' %>
+          <% else %>
+            <%= link_to 'Give up', '#', class: 'btn btn-primary button-links' %>
+          <% end %>
+        <% end %>
+      </div>
       <% end %>
-
-
-    </div>
+      </div>
     <% end %>
   </div>
 </div>

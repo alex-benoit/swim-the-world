@@ -1,9 +1,2 @@
-<h1>Strava#index</h1>
-<p>Find me in app/views/strava/index.html.erb</p>
-
-
-<%  @client = Strava::Api::V3::Client.new(:access_token => "695350e607feaa5169ca64e79667738048d831d6") %>
-
-
+<% @client = Strava::Api::V3::Client.new(:access_token => "695350e607feaa5169ca64e79667738048d831d6") %>
 <%= @client.list_athlete_activities %>
-
