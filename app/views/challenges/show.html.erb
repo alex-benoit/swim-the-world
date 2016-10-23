@@ -177,7 +177,24 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
-        <h1><%= @challenge.name %></h1>
+      <div class="info-card-challenge">
+        <div class="info-card-challenge2">
+          <div>
+            <p>Total Distance</p>
+            <p style="margin-top:-15px;margin-bottom:0px;font-weight:700;font-size:30px">100km</p>
+          </div>
+          <div>
+            <%= image_tag "flags.png" %>
+          </div>
+          <div>
+            <p>Distance Left</p>
+            <p style="margin-top:-15px;margin-bottom:0px;font-weight:700;font-size:30px">80km</p>
+          </div>
+        </div>
+        <div class="info-card-challenge3">
+          <div style="font-size: large">Today: <strong>2km</strong></div>
+          <div style="font-size: large">Average: <strong>2km/day</strong></div>
+        </div>
       </div>
     </div>
   </div>
