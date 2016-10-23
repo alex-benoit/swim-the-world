@@ -1,23 +1,43 @@
 .card {
-  height: 400px;
+  height: 380px;
   text-shadow: 0 1px 3px rgba(0,0,0,0.6);
   background-size: cover !important;
-  color: $brand-color;
-  position: relative;
+  text-align: center;
+  margin: 3px;
+  border-radius: 10px;
+  box-shadow: 0 10px 6px -6px #777;
+
+  a {
+    color: #1C1C1C;
+    font-size: 18px;
+  }
+
+  .card-main-image {
+    width: 190px;
+    display:block;
+    margin: auto;
+    padding-top: 30px;
+  }
+
+  .card-user {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  p {
+    font-size: 13px;
+  }
+
+  .button-links {
+    color: white;
+    font-size: 16px;
+  }
 }
-.card-main-image{
-  position: absolute;
-  right: 30px;
-  top: 30px;
-}
-.card-user {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-}
-.card h2 {
-  font-size: 24px;
-}
-.card p {
-  font-size: 13px;
-}
+
+
