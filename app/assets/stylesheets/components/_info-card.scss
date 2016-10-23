@@ -1,0 +1,27 @@
+.info-card-challenge {
+  // width: 80%;
+  height: 240px;
+  margin: 50px 70px;
+}
+.info-card-challenge2 {
+  // width: 80%;
+  height: 140px;
+  background-color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+.info-card-challenge3 {
+  // width: 80%;
+  height: 100px;
+  background-color: #7379AF;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  box-shadow: 0 10px 6px -6px #777;
+}
+
